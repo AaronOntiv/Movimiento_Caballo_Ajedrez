@@ -2,35 +2,58 @@
 #include <stdlib.h>
 #include <time.h>//Offers ramdoms values from clock
 
-void mostrarTablero(void); 
+void mostrarTablero(void);
 int movimiento();
 
 int tablero[8][8]={0};//inicializa el tablero con ceros
 int horizontal[8]={2,1,-1,-2,-2,-1,1,2}; //Vector de posiciones posibles
 int vertical[8]={-1,-2,-2,-1,1,2,2,1};//Vector de posiciones posibles
 int x,y;//variables globales donde se guardan las posiciones
+int *ptrMovimiento; //Apuntador para poder accesar a la variable Movimiento del metodo movimiento()
 
 
 
 int main(){
-  printf("Seleccione que posicion horizontal(Del 0 al 8 )\n");
-  scanf("%d",&x );
-  printf("Introduzca posicion vertical (Del 0 al 8)\n" );
-  scanf("%d",&y);
-  tablero[y][x]=1; //inicializa la posicion del caballo
-  mostrarTablero();
+  int bandera=1;//Avisa si se han rellenado las 64 posiciones del tablero de ajedrez
+  printf("Buen dia\n");
+  printf("Este programa utiliza el metodo de la fuerza bruta\n");
+  printf("Es decir probara una y otra vez hasta rellenar las casillas especificadas\n\n ");
+  tablero[0][0]=1; //inicializa la posicion del caballo
+  printf("Cuantas casillas quiere rellenar (1-64)?\n");
+  printf("Tome en cuenta que si coloca un numero mayor al rango el programa nunca acabara\n");
+  int numCasillas;
+  scanf("%d",&numCasillas);
+  int contadorIntentos=1;
 
   printf("Se inicia el recorrido aleatorio\n");
   srand( time( NULL ) ); //  randomiza el generador de números aleatorios mediante la función time */
+  printf("\n\n\n\n");
 
 
-  while (movimiento()) {
-    movimiento();
+  while(bandera){
+    while(movimiento()){
+      movimiento();
+    }
 
+    if(*ptrMovimiento>numCasillas){
+      bandera=0;
+    } else{
+      contadorIntentos++;
+      *ptrMovimiento=0;
+      for(int i=0;i<8;i++){
+        for(int j=0;j<8;j++){
+          tablero[i][j]=0;
+        }
+      }
+
+    }
   }
 
+
+  printf("justo despues del while\n");
   mostrarTablero();
-  printf("Movimiento = \n",movimiento );
+  printf("Total de intentos %d",contadorIntentos);
+
   return 0;
 
 } //Fin de main
@@ -72,6 +95,8 @@ int movimiento(){
   int flag=0;
   int numMovi;
   int whilecounter=0;
+  ptrMovimiento=&movimiento;
+
 
   while (flag==0) {
     whilecounter++;
@@ -112,7 +137,8 @@ int movimiento(){
     tablero[y][x]=movimiento;
     return 1;
   } else{
-    printf("Hasta aqui llego \n" );
+
+    //movimiento=0;
     return 0;
    }
 
